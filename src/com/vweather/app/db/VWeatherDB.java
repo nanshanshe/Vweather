@@ -48,12 +48,12 @@ public class VWeatherDB {
 	/*
 	 * put province to db
 	 */
-	public void saveProvicne(Province province) {
+	public void saveProvince(Province province) {
 		// TODO Auto-generated method stub
 		if (province != null) {
 			ContentValues values = new ContentValues();
-			values.put("provice_name", province.getProvinceName());
-			values.put("provice_code", province.getProvinceCode());
+			values.put("province_name", province.getProvinceName());
+			values.put("province_code", province.getProvinceCode());
 			db.insert("Province", null, values);
 		}
 
@@ -72,9 +72,9 @@ public class VWeatherDB {
 				Province province = new Province();
 				province.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				province.setProvinceName(cursor.getString(cursor
-						.getColumnIndex("provice_name")));
+						.getColumnIndex("province_name")));
 				province.setProvinceCode(cursor.getString(cursor
-						.getColumnIndex("provice_code")));
+						.getColumnIndex("province_code")));
 				list.add(province);
 
 			} while (cursor.moveToNext());
@@ -102,16 +102,17 @@ public class VWeatherDB {
 	/*
 	 * get city from db
 	 */
-	public List<City> loadCities() {
+	public List<City> loadCities(int provinceId) {
 		// TODO Auto-generated method stub
 		List<City> list = new ArrayList<City>();
-		Cursor cursor = db.query("City", null, null, null, null, null, null);
+		Cursor cursor = db.query("City", null, "province_id = ?", new String[] {String.valueOf(provinceId)}, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				City city = new City();
 				city.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				city.setCityName(cursor.getString(cursor
 						.getColumnIndex("city_name")));
+				city.setCityCode(cursor.getString(cursor.getColumnIndex("city_code")));
 				city.setProvinceId(cursor.getInt(cursor
 						.getColumnIndex("province_id")));
 				list.add(city);
@@ -141,9 +142,9 @@ public class VWeatherDB {
 	/*
 	 * get county from db
 	 */
-	public List<County> loadCounties() {
+	public List<County> loadCounties(int cityId) {
 		List<County> list = new ArrayList<County>();
-		Cursor cursor = db.query("County", null, null, null, null, null, null);
+		Cursor cursor = db.query("County", null, "city_id = ?", new String[] {String.valueOf(cityId)}, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				County county = new County();
